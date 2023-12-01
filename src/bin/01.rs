@@ -25,6 +25,8 @@ pub fn part_two(input: &str) -> Option<u32> {
     // For each line, iterate through the chars
     // 1) If char is numeric, push it to a vector
     // 2) Else, search for every number that is spelled out starting at the current index.
+    //    Because there could only possibly be one number at a given index,
+    //    we stop searching once we find one.
 
     const NUMBERS: [&str; 9] = [
         "one", "two", "three", "four", "five", "six", "seven", "eight", "nine",
@@ -40,10 +42,7 @@ pub fn part_two(input: &str) -> Option<u32> {
                     }
                     // Search for numbers that are spelled out starting at index 'i'
                     else if let Some((num_i, _)) = NUMBERS.iter().enumerate().find(|(_, &n)| {
-                        // We use min() to avoid reading chars past the end of the line
-                        line[i..min(i + n.len(), i + line[i..].len())]
-                            .find(n)
-                            .is_some()
+                        i + n.len() < line.len() && line[i..(i + n.len())].find(n).is_some()
                     }) {
                         nums.push(
                             char::from_digit((num_i + 1) as u32, 10)
