@@ -39,19 +39,12 @@ pub fn part_two(input: &str) -> Option<u32> {
                         nums.push(c);
                     }
                     // Search for numbers that are spelled out starting at index 'i'
-                    else if let Some((num_i, _)) = NUMBERS
-                        .iter()
-                        .enumerate()
-                        .map(|(num_i, n)| {
-                            (
-                                num_i,
-                                // We use min() to avoid reading chars past the end of the line
-                                line[i..min(i + n.len(), i + line[i..].len())].find(n),
-                            )
-                        })
-                        .filter(|(_, n)| n.is_some())
-                        .next()
-                    {
+                    else if let Some((num_i, _)) = NUMBERS.iter().enumerate().find(|(_, &n)| {
+                        // We use min() to avoid reading chars past the end of the line
+                        line[i..min(i + n.len(), i + line[i..].len())]
+                            .find(n)
+                            .is_some()
+                    }) {
                         nums.push(
                             char::from_digit((num_i + 1) as u32, 10)
                                 .expect("unable to parse as digit"),
