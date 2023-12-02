@@ -56,11 +56,11 @@ pub fn part_one(input: &str) -> Option<u32> {
             let balls = parse_game(line);
             balls
                 .iter()
-                .all(|(value, color)| {
+                .all(|&(value, color)| {
                     let is_possible = match (value, color) {
-                        (value, &"red") if value > &MAX_RED => false,
-                        (value, &"blue") if value > &MAX_BLUE => false,
-                        (value, &"green") if value > &MAX_GREEN => false,
+                        (value, "red") if value > MAX_RED => false,
+                        (value, "blue") if value > MAX_BLUE => false,
+                        (value, "green") if value > MAX_GREEN => false,
                         _ => true,
                     };
                     is_possible
@@ -82,11 +82,11 @@ pub fn part_two(input: &str) -> Option<u32> {
             let mut curr_blue: u32 = 0;
             let mut curr_green: u32 = 0;
 
-            balls.iter().for_each(|(value, color)| {
+            balls.iter().for_each(|&(value, color)| {
                 match (value, color) {
-                    (value, &"red") if value > &curr_red => curr_red = *value,
-                    (value, &"blue") if value > &curr_blue => curr_blue = *value,
-                    (value, &"green") if value > &curr_green => curr_green = *value,
+                    (value, "red") if value > curr_red => curr_red = value,
+                    (value, "blue") if value > curr_blue => curr_blue = value,
+                    (value, "green") if value > curr_green => curr_green = value,
                     _ => (),
                 };
             });
