@@ -31,9 +31,20 @@ pub fn split_game(input: &str) -> IResult<&str, Vec<&str>> {
     )(input)
 }
 
-pub fn parse_game(input: &str) -> Vec<&str> {
+pub fn parse_game(input: &str) -> Vec<(u32, &str)> {
     let (remaining, _) = parse_game_number(input).unwrap();
-    let (_, balls) = split_game(remaining).unwrap();
+    let balls: Vec<(u32, &str)> = split_game(remaining)
+        .unwrap()
+        .1
+        .iter()
+        .map(|ball| ball.split_once(' ').expect("no space found"))
+        .map(|(value, color)| {
+            (
+                value.parse::<u32>().expect("could not parse value to u32"),
+                color,
+            )
+        })
+        .collect();
     balls
 }
 
@@ -45,18 +56,11 @@ pub fn part_one(input: &str) -> Option<u32> {
             let balls = parse_game(line);
             balls
                 .iter()
-                .map(|ball| ball.split_once(' ').expect("no space found"))
-                .map(|(value, color)| {
-                    (
-                        value.parse::<u32>().expect("could not parse value to u32"),
-                        color,
-                    )
-                })
                 .all(|(value, color)| {
                     let is_possible = match (value, color) {
-                        (value, "red") if value > MAX_RED => false,
-                        (value, "blue") if value > MAX_BLUE => false,
-                        (value, "green") if value > MAX_GREEN => false,
+                        (value, &"red") if value > &MAX_RED => false,
+                        (value, &"blue") if value > &MAX_BLUE => false,
+                        (value, &"green") if value > &MAX_GREEN => false,
                         _ => true,
                     };
                     is_possible
@@ -78,23 +82,14 @@ pub fn part_two(input: &str) -> Option<u32> {
             let mut curr_blue: u32 = 0;
             let mut curr_green: u32 = 0;
 
-            balls
-                .iter()
-                .map(|ball| ball.split_once(' ').expect("no space found"))
-                .map(|(value, color)| {
-                    (
-                        value.parse::<u32>().expect("could not parse value to u32"),
-                        color,
-                    )
-                })
-                .for_each(|(value, color)| {
-                    match (value, color) {
-                        (value, "red") if value > curr_red => curr_red = value,
-                        (value, "blue") if value > curr_blue => curr_blue = value,
-                        (value, "green") if value > curr_green => curr_green = value,
-                        _ => (),
-                    };
-                });
+            balls.iter().for_each(|(value, color)| {
+                match (value, color) {
+                    (value, &"red") if value > &curr_red => curr_red = *value,
+                    (value, &"blue") if value > &curr_blue => curr_blue = *value,
+                    (value, &"green") if value > &curr_green => curr_green = *value,
+                    _ => (),
+                };
+            });
             curr_red * curr_blue * curr_green
         })
         .sum();
