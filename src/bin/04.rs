@@ -5,7 +5,6 @@ use nom::{bytes::complete::take_while, combinator::map, IResult, Parser};
 
 pub fn strip_game_number(input: &str) -> IResult<&str, ()> {
     // Removes the game number (we can use the index instead)
-    // "Game 1: 3 blue, 4 red" -> "3 blue, 4 red"
     map(
         take_while(|c| c != ':').and(take_while(|c: char| !c.is_numeric())),
         drop,
