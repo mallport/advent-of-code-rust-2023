@@ -58,7 +58,7 @@ pub fn part_two(input: &str) -> Option<u32> {
     // Iterate through each card, updating the hashmap with the number of copies
     // Finally, sum the entire hashmap to get the final count
 
-    let input = split_to_list(input);
+    let input = split_to_vec(input);
     let mut scratch_cards: HashMap<usize, u32> = HashMap::new();
     for i in 0..input.len() {
         // Initialize hashmap as having 1 original copy of a scratch card
