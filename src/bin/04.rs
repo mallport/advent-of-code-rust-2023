@@ -58,13 +58,13 @@ pub fn part_two(input: &str) -> Option<u32> {
     // Iterate through each card, updating the hashmap with the number of copies
     // Finally, sum the entire hashmap to get the final count
 
-    let input = split_to_vec(input);
+    let cards: Vec<(Vec<u32>, Vec<u32>)> = split_to_vec(input);
     let mut scratch_cards: HashMap<usize, u32> = HashMap::new();
-    for i in 0..input.len() {
+    for i in 0..cards.len() {
         // Initialize hashmap as having 1 original copy of a scratch card
         scratch_cards.insert(i, 1);
     }
-    input.iter().enumerate().for_each(|(i, (winning, nums))| {
+    cards.iter().enumerate().for_each(|(i, (winning, nums))| {
         let num_copies = scratch_cards.get(&i).unwrap().clone();
         let num_matches = nums.iter().filter(|num| winning.contains(num)).count();
         for cards_i in (i + 1)..(i + 1 + num_matches) {
