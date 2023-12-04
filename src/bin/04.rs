@@ -12,6 +12,8 @@ pub fn strip_game_number(input: &str) -> IResult<&str, ()> {
 }
 
 fn split_to_list(input: &str) -> Vec<(Vec<u32>, Vec<u32>)> {
+    // Splits input into a vector, where each element in the outer vec represents
+    // a vector of (winning, nums) scratch-cards
     input
         .lines()
         .map(|line| strip_game_number(line).unwrap().0)
@@ -28,6 +30,10 @@ fn split_to_list(input: &str) -> Vec<(Vec<u32>, Vec<u32>)> {
 }
 
 pub fn part_one(input: &str) -> Option<u32> {
+    // General strategy:
+    // For each card, for each number, check if the number is in the winning card
+    // If it is, double the current score
+
     let input = split_to_list(input);
     let result: u32 =
         input
@@ -46,6 +52,12 @@ pub fn part_one(input: &str) -> Option<u32> {
 }
 
 pub fn part_two(input: &str) -> Option<u32> {
+    // General strategy:
+    // Maintain a hashmap of scratch cards,
+    // where the value represents (original + copies) number of scratch_cards found
+    // Iterate through each card, updating the hashmap with the number of copies
+    // Finally, sum the entire hashmap to get the final count
+
     let input = split_to_list(input);
     let mut scratch_cards: HashMap<usize, u32> = HashMap::new();
     for i in 0..input.len() {
