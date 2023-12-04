@@ -11,7 +11,7 @@ pub fn strip_game_number(input: &str) -> IResult<&str, ()> {
     )(input)
 }
 
-fn split_to_list(input: &str) -> Vec<(Vec<u32>, Vec<u32>)> {
+fn split_to_vec(input: &str) -> Vec<(Vec<u32>, Vec<u32>)> {
     // Splits input into a vector, where each element in the outer vec represents
     // a vector of (winning, nums) scratch-cards
     input
@@ -34,9 +34,9 @@ pub fn part_one(input: &str) -> Option<u32> {
     // For each card, for each number, check if the number is in the winning card
     // If it is, double the current score
 
-    let input = split_to_list(input);
+    let cards: Vec<(Vec<u32>, Vec<u32>)> = split_to_vec(input);
     let result: u32 =
-        input
+        cards
             .iter()
             .map(|(winning, nums)| {
                 nums.iter().fold(0, |sum, num| {
